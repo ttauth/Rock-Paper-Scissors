@@ -1,85 +1,76 @@
-function getComputerChoice(){
-    let x = Math.floor(Math.random() * 3) + 1; //pick random number b/w 1 and 3
-    var y;
-    switch(x){
-        case 1:
-            y = "rock";
-            break;
-        case 2:
-            y = "paper";
-            break;
-        case 3:
-            y = "scissors";
-            break;
+// Get computer's choice
+function getComputerChoice() {
+    const choices = ["rock", "paper", "scissors"];
+    const randomIndex = Math.floor(Math.random() * choices.length);
+    return choices[randomIndex];
+}
+
+// Determine the result of the game
+function determineWinner(playerSelect, compSelect) {
+    if (
+        (playerSelect === "Scissors" && compSelect === "scissors") ||
+        (playerSelect === "Rock" && compSelect === "rock") ||
+        (playerSelect === "Paper" && compSelect === "paper")
+    )  {
+        return "tied";
+    } else if (
+        (playerSelect === "Rock" && compSelect === "scissors") ||
+        (playerSelect === "Paper" && compSelect === "rock") ||
+        (playerSelect === "Scissors" && compSelect === "paper")
+    ) {
+        return "you win";
+    } else {
+        return "you lose";
     }
-    return y; 
 }
 
-function rpsSim(playerSelect, compSelect){
-    var a;
-    if (playerSelect == "rock"){
-        if (compSelect == "rock"){
-            a = "tied";
-        }else if (compSelect == "paper"){
-            a = "you lose, paper beats rock";
-        } else if (compSelect == "scissors"){
-            a = "you win, rock beats scissors!";
-        }
-    }else if (playerSelect == "paper"){
-        if (compSelect == "paper"){
-            a = "tied";
-        }else if (compSelect == "rock"){
-            a = "you win, paper beats rock!";
-        } else if (compSelect == "scissors"){
-            a = "you lose, paper loses to scissors!";
-        }
-    }else if (playerSelect == "scissors"){
-        if (compSelect == "scissors"){
-            a = "tied!";
-        }else if (compSelect == "rock"){
-            a = "you lose, scissors loses to rock!";
-        } else if (compSelect == "paper"){
-            a = "you win, scissors beats paper!";
-        }
-    }
-    return a;
+// Highlight CPU's choice
+function highlightComputerChoice(choice) {
+    const button = document.getElementById(choice);
+    button.classList.add("active");
 }
-const rockButt = document.getElementById("rock");
-const paperButt = document.getElementById("paper");
-const scissorButt = document.getElementById("scissors");
 
+// Clear highlights
+function clearHighlights() {
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach(button => button.classList.remove("active"));
+}
 
-var buttClick;
+// Play a round of the game
+function playRound(playerChoice) {
+    const compChoice = getComputerChoice();
+    highlightComputerChoice(compChoice);
+    const result = determineWinner(playerChoice, compChoice);
+     // Update the result on the screen
+    const resultElement = document.getElementById("result");
+    resultElement.textContent = `You chose ${playerChoice}, CPU chose ${compChoice}. Result: ${result}.`;
+ 
+    setTimeout(clearHighlights, 1000);
+    return result;
+}
 
-function game(){
-    let rds = 5;
-    while(rds != 0){
-    var compSelect = getComputerChoice();
-    
-    rockButt.addEventListener("click", function() {
-        // This function will be executed when the button is clicked
-        // You can put your code here to handle the button click
-        buttClick = "rock"; 
-        // You can also call a function or perform any other actions you need here
+// Attach event listeners to buttons
+const buttons = document.querySelectorAll("button");
+buttons.forEach(button => {
+    button.addEventListener("click", function() {
+        const playerChoice = this.id;
+        const result = playRound(playerChoice);
+        console.log(result);
     });
-    // Add a click event listener to the button
-    paperButt.addEventListener("click", function() {
-        // This function will be executed when the button is clicked
-        // You can put your code here to handle the button click
-        buttClick = "paper";
-        // You can also call a function or perform any other actions you need here
-    });
+});
+// Key points of improvement:
 
-    // Add a click event listener to the button
-    scissorButt.addEventListener("click", function() {
-        // This function will be executed when the button is clicked
-        // You can put your code here to handle the button click
-        buttClick = "scissors"; 
-        // You can also call a function or perform any other actions you need here
-    });
-    console.log(rpsSim(buttClick, compSelect));
+// Use Arrays for Choices: You can use an array for the choices instead of a switch statement for the CPU's choice.
 
-    rds = rds - 1;
-}
-}
-game();
+// Simplify Result Logic: The determineWinner function uses conditional statements to determine the result based on the chosen options.
+
+// Separation of Concerns: The code is organized into separate functions for different purposes, improving readability and maintainability.
+
+// Event Listeners: The event listeners are attached only once in this code. Previously, they were inside a loop which wasn't necessary and could lead to unexpected behavior.
+
+// Remember to adapt the CSS classes and structure according to your styling needs.
+
+
+
+
+
